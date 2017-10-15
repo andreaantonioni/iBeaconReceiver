@@ -13,7 +13,6 @@ import Alamofire
 class BeaconViewController: UIViewController {
     
     let locationManager = CLLocationManager()
-    
     var beaconRegion: CLBeaconRegion!
     
     var isNearToTheDoor = false {
@@ -47,9 +46,7 @@ class BeaconViewController: UIViewController {
     func initializeTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 4, repeats: true, block: { _ in
             guard self.isNearToTheDoor else { return }
-            
-            self.httpRequest()
-            
+            NetworkManager.shared.accessRequest()
         })
     }
     
@@ -66,21 +63,7 @@ class BeaconViewController: UIViewController {
         locationManager.startUpdatingLocation()
     }
     
-    func httpRequest() {
-        let header: HTTPHeaders = ["Authorization": "KISI-LINK 75388d1d1ff0dff6b7b04a7d5162cc6c"]
-        let request = Alamofire.request("https://api.getkisi.com/locks/5124/access", method: .post, headers: header)
-        print(request.debugDescription)
-        
-        request.response { response in
-            print("Request: \(String(describing: response.request))")
-            print("Response: \(String(describing: response.response))")
-            print("Error: \(String(describing: response.error))")
-            
-            if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-                print("Data: \(utf8Text)")
-            }
-        }
-    }
+    
     
 }
 

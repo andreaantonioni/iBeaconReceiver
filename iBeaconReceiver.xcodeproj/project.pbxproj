@@ -50,6 +50,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		17CB2D9D1F936086006793D8 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				17EF65111F9269F600E5AC99 /* BeaconViewController.swift */,
+				17EF65041F921A0300E5AC99 /* ProfileViewController.swift */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
 		17EF64E61F92195B00E5AC99 = {
 			isa = PBXGroup;
 			children = (
@@ -71,12 +80,11 @@
 		17EF64F11F92195B00E5AC99 /* iBeaconReceiver */ = {
 			isa = PBXGroup;
 			children = (
-				17CB2D9B1F935DEB006793D8 /* TabItem.swift */,
-				17EF650D1F9264DA00E5AC99 /* Model */,
 				17EF64F21F92195B00E5AC99 /* AppDelegate.swift */,
-				17EF65041F921A0300E5AC99 /* ProfileViewController.swift */,
-				17EF65111F9269F600E5AC99 /* BeaconViewController.swift */,
+				17CB2D9B1F935DEB006793D8 /* TabItem.swift */,
 				17CB2D991F934988006793D8 /* NetworkManager.swift */,
+				17EF650D1F9264DA00E5AC99 /* Model */,
+				17CB2D9D1F936086006793D8 /* ViewControllers */,
 				17EF65101F92652700E5AC99 /* Storyboard */,
 				17EF64F91F92195B00E5AC99 /* Assets.xcassets */,
 				17EF64FE1F92195B00E5AC99 /* Info.plist */,

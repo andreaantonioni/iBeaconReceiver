@@ -96,11 +96,14 @@ extension BeaconViewController: CLLocationManagerDelegate {
         guard let nearestBeacon = beacons.first else { return }
         
         switch nearestBeacon.proximity {
-        case .immediate, .near:
+        case .immediate:
             view.backgroundColor = .green
             if case .unknown = status {
                 status.switch()
             }
+        
+        case .near:
+            view.backgroundColor = .yellow
             
         default:
             view.backgroundColor = .red
@@ -108,7 +111,6 @@ extension BeaconViewController: CLLocationManagerDelegate {
                 status.switch()
             }
         }
-        
         
     }
     

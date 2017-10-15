@@ -15,17 +15,30 @@ class BeaconViewController: UIViewController {
     let locationManager = CLLocationManager()
     var beaconRegion: CLBeaconRegion!
     
-    var isNearToTheDoor = false {
-        didSet {
-            if let timer = timer, !isNearToTheDoor {
+    private enum BeaconStatus {
+        case finded(timer: Timer)
+        case unknown
+        
+        mutating func `switch`() {
+            switch self {
+            case .finded(let timer):
                 timer.invalidate()
-            } else if isNearToTheDoor, timer == nil {
-                self.initializeTimer()
+                self = .unknown
+            case .unknown:
+                self = .finded(timer: createTimer())
             }
         }
+        
+        private func createTimer() -> Timer {
+            return Timer.scheduledTimer(withTimeInterval: 4, repeats: true, block: { _ in
+                print("🔔")
+                NetworkManager.shared.accessRequest()
+            })
+        }
     }
-    var timer: Timer?
-
+    
+    private var status: BeaconStatus = .unknown
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -43,13 +56,6 @@ class BeaconViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func initializeTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 4, repeats: true, block: { _ in
-            guard self.isNearToTheDoor else { return }
-            NetworkManager.shared.accessRequest()
-        })
-    }
-    
     func monitorBeacons() {
         // Match all beacons with the specified UUID
         let proximityUUID = UUID(uuidString:
@@ -62,8 +68,6 @@ class BeaconViewController: UIViewController {
         self.locationManager.startMonitoring(for: beaconRegion)
         locationManager.startUpdatingLocation()
     }
-    
-    
     
 }
 
@@ -79,7 +83,6 @@ extension BeaconViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager,
                          didDetermineState state: CLRegionState,
                          for region: CLRegion) {
-        print(state.rawValue)
         if state == .inside {
             locationManager.startRangingBeacons(in: beaconRegion)
         }
@@ -89,25 +92,24 @@ extension BeaconViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager,
                          didRangeBeacons beacons: [CLBeacon],
                          in region: CLBeaconRegion) {
-        if beacons.count > 0 {
-            
-            let nearestBeacon = beacons.first!
-            
-            switch nearestBeacon.proximity {
-            case .immediate, .near:
-                isNearToTheDoor = true
-                view.backgroundColor = .green
-                
-            case .far:
-                isNearToTheDoor = false
-                view.backgroundColor = .yellow
-                
-            default:
-                isNearToTheDoor = false
-                view.backgroundColor = .red
+        
+        guard let nearestBeacon = beacons.first else { return }
+        
+        switch nearestBeacon.proximity {
+        case .immediate, .near:
+            view.backgroundColor = .green
+            if case .unknown = status {
+                status.switch()
             }
             
+        default:
+            view.backgroundColor = .red
+            if case .finded = status {
+                status.switch()
+            }
         }
+        
+        
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

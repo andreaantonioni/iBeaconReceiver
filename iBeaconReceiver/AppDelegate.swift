@@ -15,7 +15,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        let beaconViewControler = Storyboard.Main.instantiate(BeaconViewController.self)
+        beaconViewControler.tabBarItem = TabItem.tabBarItem(for: .beacon)
+        
+        let profileViewController = ProfileViewController.instantiate(withUser: User(fullname: "Andrea Antonioni", avatar: #imageLiteral(resourceName: "app-store")))
+        profileViewController.tabBarItem = TabItem.tabBarItem(for: .profile)
+        
+        let tabController = UITabBarController()
+        tabController.setViewControllers([
+            
+            UINavigationController(rootViewController: beaconViewControler),
+            UINavigationController(rootViewController: profileViewController)
+            
+            ], animated: false)
+        
+        window?.rootViewController = tabController
+        window?.makeKeyAndVisible()
+        
         return true
     }
 
@@ -30,7 +47,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        
+        let splashScreen = UIView(frame: self.window!.rootViewController!.view.frame)
+        splashScreen.backgroundColor = .blue
+        self.window!.rootViewController!.view.addSubview(splashScreen)
+        self.window!.makeKeyAndVisible()
+        UIView.animate(withDuration: 5, animations: {
+            splashScreen.alpha = 0.0
+        }) { (_) in
+            splashScreen.removeFromSuperview()
+        }
+    
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {

@@ -1,5 +1,7 @@
 # iBeaconReceiver
 
+You an download a video to see the app running [here](https://drive.google.com/open?id=0B6-R8WvlBYtGVVN4TWxTei1HQ1U).
+
 ## How to run
 
 1. To turn you Mac into a Beacon download [MactsAsBeacon](https://github.com/timd/MactsAsBeacon) and follow the instructions written in its README.
